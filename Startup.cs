@@ -17,6 +17,7 @@ namespace ABapi {
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices (IServiceCollection services) {
+            services.AddCors ();
             services.AddMvc ();
             services.AddControllersWithViews ();
             services.AddAutoMapper (AppDomain.CurrentDomain.GetAssemblies ());
@@ -32,6 +33,11 @@ namespace ABapi {
             services.AddControllers (mvcOptions => mvcOptions.EnableEndpointRouting = false);
         }
         public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
+            app.UseCors (corsPolicyBuilder =>
+                corsPolicyBuilder.WithOrigins ("http://localhost:3000")
+                .AllowAnyMethod ()
+                .AllowAnyHeader ());
+            app.UseMvc ();
             if (env.IsDevelopment ()) {
                 app.UseDeveloperExceptionPage ();
             } else {
